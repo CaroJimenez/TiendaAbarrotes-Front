@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { doGet, doPost } from "../../utils/Axios";
+import { doGet, doPost } from "../../config/Axios";
 import Swal from "sweetalert2";
 
 export default function ProductList() {
