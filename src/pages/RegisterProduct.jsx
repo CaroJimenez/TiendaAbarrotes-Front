@@ -1,7 +1,7 @@
 import React from 'react';
 import productsImage from '../assets/products.png';
-import ProductList from '../components/product/ProductList';
 import Navbar from "../components/navbar/Navbar";
+import RegisterProductForm from '../components/product/Register';
 
 export default function Product() {
     const options = [
@@ -15,10 +15,6 @@ export default function Product() {
       },
     ];
 
-    const navigateToRegisterProduct = () => {
-      window.location.href = "/register-product";
-    };
-
     return (
       <div style={styles.container}>
         <div style={styles.navbarContainer}>
@@ -28,12 +24,9 @@ export default function Product() {
           <img src={productsImage} alt="productos" style={styles.image} />
           <div style={styles.overlay}></div>
         </div>
-        <h1 className='mt-3' style={styles.title}>Lista de productos</h1>
+        <h1 className='mt-3' style={styles.title}>Registrar producto</h1>
         <div className='container'>
-          <ProductList />
-          <div className='d-flex justify-content-end'>
-            <button className='btn btn-primary mt-5' onClick={navigateToRegisterProduct}>Registrar producto</button>
-          </div>
+          <RegisterProductForm />
         </div>
       </div>
     );

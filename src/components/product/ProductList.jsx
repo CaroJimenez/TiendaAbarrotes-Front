@@ -18,6 +18,7 @@ export default function ProductList() {
         });
       });
   }, []);
+  
 
   const addToCart = (product) => {
     return () => {

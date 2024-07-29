@@ -2,7 +2,7 @@ import React from "react";
 import {doPost} from "../../config/Axios";
 
 
-export default function LoginForm(){
+export default function RegisterForm(){
 
   const login = async () => {
     const email = document.getElementById('email').value;
@@ -14,8 +14,12 @@ export default function LoginForm(){
     return (
       <form>
         <div className="mb-3">
-          <label for="email">Correo</label>
-          <input type="email" className="form-control" id="email" />
+          <label for="fullname">Nombre completo</label>
+          <input type="text" className="form-control" id="fullname" />
+        </div>
+        <div className="mb-3">
+          <label for="user">Nombre de usuario</label>
+          <input type="text" className="form-control" id="user" />
         </div>
         <div className="mb-3">
           <label for="password">Contraseña</label>
@@ -27,10 +31,10 @@ export default function LoginForm(){
             login();
           }
         }>
-          Iniciar sesión
+          Registrarse
         </button>
         <div className="text-center mt-2">
-          <a href="/register">Registrarse</a>
+          <a href="/login">Iniciar sesión</a>
         </div>
 
       </form>
