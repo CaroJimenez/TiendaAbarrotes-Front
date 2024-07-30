@@ -1,5 +1,7 @@
 import React from "react";
 import Navbar from "../components/navbar/Navbar";
+import Form from "../components/supplier/Form";
+import img from "../assets/proveedores.jpeg";
 
 function Suppliers() {
   const options = [
@@ -14,18 +16,22 @@ function Suppliers() {
   ];
   return (
     <div style={styles.container}>
+      {/* <div style={styles.formContainer}>
+        <Form />
+      </div> */}
+
       <div style={styles.navbarContainer}>
         <Navbar name="Proveedores" options={options} />
       </div>
-      <div style={{ padding: "3% 0 3%" }}>
-        <h1>Lista de proveedores</h1>
-        <div style={styles.buttonNewContainer}>
-          <button type="submit" className="btn btn-primary">
-            Nuevo proveedor
-          </button>
-        </div>
+      <div style={styles.titleContainer}>
+        <img src={img} style={styles.titleImage} alt="proveedores" />
+        <h1 style={styles.title}>Lista de proveedores</h1>
       </div>
-
+      <div style={styles.buttonContainer}>
+        <button type="submit" className="btn btn-primary">
+          Nuevo proveedor
+        </button>
+      </div>
       <div style={styles.tableContainer}>
         <div style={styles.tableHeader}>
           <div style={{ ...styles.tableTitle, ...styles.tableCell }}>
@@ -98,8 +104,6 @@ const styles = {
   },
   navbarContainer: {
     display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
     width: "100%",
   },
   tableContainer: {
@@ -135,10 +139,40 @@ const styles = {
     backgroundColor: "var(--color-primary)",
     borderColor: "var(--color-primary)",
   },
-  buttonNewContainer: {
+
+  formContainer: {
     position: "absolute",
-    right: "10%",
-    top: "15%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    height: "100%",
+  },
+  titleContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    width: "100%",
+    marginBottom: "1%",
+  },
+  titleImage: {
+    width: "100%",
+    height: "300px",
+    objectFit: "cover",
+  },
+  title: {
+    color: "white",
+    position: "absolute",
+    zIndex: 1,
+    fontSize: "3rem",
+    top: "60%",
+  },
+  buttonContainer: {
+    display: "flex",
+    justifyContent: "flex-end",
+    width: "80%",
+    marginBottom: "1%",
   },
 };
 
