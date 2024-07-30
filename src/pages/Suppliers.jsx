@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../components/navbar/Navbar";
 import Form from "../components/supplier/Form";
 import img from "../assets/proveedores.jpeg";
 
 function Suppliers() {
+  const [isVisible, setIsVisible] = useState(false);
+  const toggleVisibility = () => {
+    setIsVisible(!isVisible);
+  };
+  const handleCloseForm = () => {
+    setIsVisible(false);
+  };
   const options = [
     {
       name: "Productos",
@@ -16,9 +23,11 @@ function Suppliers() {
   ];
   return (
     <div style={styles.container}>
-      {/* <div style={styles.formContainer}>
-        <Form />
-      </div> */}
+      {isVisible && (
+        <div style={styles.formContainer}>
+          <Form onClose={handleCloseForm} />
+        </div>
+      )}
 
       <div style={styles.navbarContainer}>
         <Navbar name="Proveedores" options={options} />
@@ -28,7 +37,11 @@ function Suppliers() {
         <h1 style={styles.title}>Lista de proveedores</h1>
       </div>
       <div style={styles.buttonContainer}>
-        <button type="submit" className="btn btn-primary">
+        <button
+          type="submit"
+          className="btn btn-primary"
+          onClick={toggleVisibility}
+        >
           Nuevo proveedor
         </button>
       </div>
@@ -147,6 +160,7 @@ const styles = {
     justifyContent: "center",
     width: "100%",
     height: "100%",
+    zIndex: 1,
   },
   titleContainer: {
     display: "flex",
@@ -164,7 +178,6 @@ const styles = {
   title: {
     color: "white",
     position: "absolute",
-    zIndex: 1,
     fontSize: "3rem",
     top: "60%",
   },
