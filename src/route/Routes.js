@@ -5,16 +5,33 @@ import Login from "../pages/Login";
 import Suppliers from "../pages/Suppliers";
 import Register from "../pages/Register";
 import RegisterProduct from "../pages/RegisterProduct";
+import Cart from "../pages/Cart";
+
 
 export default function Router() {
   return (
     <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/products" element={<Product />} />
-      <Route path="/suppliers" element={<Suppliers />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/register-product" element={<RegisterProduct />} />
+
+      <Route path="/"
+        element={<Login />} />
+
+      <Route path="/products"
+        element={<Product />} />
+
+      <Route path="/suppliers"
+        element={<Suppliers />} />
+
+      <Route path="/register"
+        element={<Register />} />
+
+      <Route path="/register"
+        element={<Register />} />
+
+      <Route path="/register-product"
+        element={<RegisterProduct />} />
+
+      <Route path="/mi-carrito"
+        element={<Cart />} />
     </Routes>
   );
 }
