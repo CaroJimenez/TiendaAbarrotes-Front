@@ -5,6 +5,7 @@ import Login from "../pages/Login";
 import Suppliers from "../pages/Suppliers";
 import Register from "../pages/Register";
 import RegisterProduct from "../pages/RegisterProduct";
+import CartPage from '../pages/CartPage';
 
 export default function Router() {
   return (
@@ -15,6 +16,7 @@ export default function Router() {
       <Route path="/register" element={<Register />} />
       <Route path="/register" element={<Register />} />
       <Route path="/register-product" element={<RegisterProduct />} />
+      <Route path="/cart" element={<CartPage />} />
     </Routes>
   );
 }

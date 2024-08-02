@@ -2,7 +2,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const instance = axios.create({
-  baseURL: "http://localhost:8080/", // URL de la API
+  baseURL: "https://fakestoreapi.com/products/", // URL de la API
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",
