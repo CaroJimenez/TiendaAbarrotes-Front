@@ -29,14 +29,14 @@ export default function SupplierForm({ onClose, initialValues, onSubmit }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const action = initialValues ? "actualizar" : "registrar";
-    const id = initialValues._id;
-    console.log(id)
+    const id = initialValues ? initialValues._id : null;
+    console.log(id);
     const url = initialValues 
       ? `https://muyvj4lsu6.execute-api.us-east-1.amazonaws.com/Prod/supplier/update/${id}`
       : "https://muyvj4lsu6.execute-api.us-east-1.amazonaws.com/Prod/supplier/insert";
-
+  
     Swal.fire({
       title: `¿Estás seguro de ${action} el proveedor?`,
       icon: 'warning',
@@ -65,7 +65,7 @@ export default function SupplierForm({ onClose, initialValues, onSubmit }) {
               timer: 1500,
             });
           }
-
+  
           setSupplier({
             name: "",
             contact: "",
@@ -76,7 +76,7 @@ export default function SupplierForm({ onClose, initialValues, onSubmit }) {
           }, 3000);
           
           if (onSubmit) onSubmit();
-
+  
         } catch (error) {
           console.error(error);
           Swal.fire({
@@ -90,6 +90,7 @@ export default function SupplierForm({ onClose, initialValues, onSubmit }) {
       }
     });
   };
+  
 
   const handleClear = () => {
     setSupplier({
