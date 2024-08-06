@@ -1,18 +1,115 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import Swal from "sweetalert2";
+import { doPost, doPatch } from "../../config/Axios";
 import img from "../../assets/delivery.png";
 
-function Form({ onClose }) {
+export default function SupplierForm({ onClose, initialValues, onSubmit }) {
+  const [supplier, setSupplier] = useState({
+    name: "",
+    contact: "",
+    phone: "",
+  });
+
+  useEffect(() => {
+    if (initialValues) {
+      setSupplier({
+        name: initialValues.name || "",
+        contact: initialValues.contact || "",
+        phone: initialValues.phone || "",
+      });
+    }
+  }, [initialValues]);
+
+  const handleChange = (e) => {
+    setSupplier({
+      ...supplier,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const action = initialValues ? "actualizar" : "registrar";
+    const id = initialValues._id;
+    console.log(id)
+    const url = initialValues 
+      ? `https://muyvj4lsu6.execute-api.us-east-1.amazonaws.com/Prod/supplier/update/${id}`
+      : "https://muyvj4lsu6.execute-api.us-east-1.amazonaws.com/Prod/supplier/insert";
+
+    Swal.fire({
+      title: `¿Estás seguro de ${action} el proveedor?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: `Sí, ${action}`,
+      cancelButtonText: 'Cancelar',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          if (initialValues) {
+            await doPatch(url, supplier);
+            Swal.fire({
+              icon: "success",
+              title: "Proveedor actualizado",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          } else {
+            await doPost(url, supplier);
+            Swal.fire({
+              icon: "success",
+              title: "Proveedor registrado",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          }
+
+          setSupplier({
+            name: "",
+            contact: "",
+            phone: "",
+          });
+          setTimeout(() => {
+            window.location.href = window.location.href;
+          }, 3000);
+          
+          if (onSubmit) onSubmit();
+
+        } catch (error) {
+          console.error(error);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: initialValues ? "Error al actualizar el proveedor" : "Error al registrar el proveedor",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+      }
+    });
+  };
+
+  const handleClear = () => {
+    setSupplier({
+      name: "",
+      contact: "",
+      phone: "",
+    });
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.header}>
         <div style={styles.titleContainer}>
-          <h5 style={styles.title}>Formulario de proveedores</h5>
+          <h5 style={styles.title}>{initialValues ? "Editar proveedor" : "Nuevo proveedor"}</h5>
         </div>
 
         <div style={styles.buttonClose}>
           <button
-            class="btn btn-primary"
-            type="submit"
+            className="btn btn-primary"
+            type="button"
             style={styles.button}
             onClick={onClose}
           >
@@ -29,35 +126,44 @@ function Form({ onClose }) {
         <div style={styles.inputContainer}>
           <input
             type="text"
-            class="form-control"
+            className="form-control"
             placeholder="Nombre del proveedor"
             aria-label="SupplierName"
             aria-describedby="basic-addon1"
+            name="name"
+            value={supplier.name}
+            onChange={handleChange}
           />
         </div>
         <div style={styles.inputContainer}>
           <input
             type="text"
-            class="form-control"
+            className="form-control"
             placeholder="Contacto"
             aria-label="Contact"
             aria-describedby="basic-addon1"
+            name="contact"
+            value={supplier.contact}
+            onChange={handleChange}
           />
         </div>
         <div style={styles.inputContainer}>
           <input
             type="number"
-            class="form-control"
+            className="form-control"
             placeholder="Teléfono"
             aria-label="PhoneNumber"
             aria-describedby="basic-addon1"
+            name="phone"
+            value={supplier.phone}
+            onChange={handleChange}
           />
         </div>
         <div style={styles.buttonsContainer}>
-          <button class="btn btn-primary" type="submit">
-            Registrar
+          <button className="btn btn-primary" type="submit" onClick={handleSubmit}>
+            {initialValues ? "Actualizar" : "Registrar"}
           </button>
-          <button class="btn btn-warning" type="submit">
+          <button className="btn btn-warning" type="button" onClick={handleClear}>
             Limpiar
           </button>
         </div>
@@ -133,5 +239,3 @@ const styles = {
     height: "100%",
   },
 };
-
-export default Form;

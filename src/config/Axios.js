@@ -2,10 +2,13 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const instance = axios.create({
-  baseURL: "https://fakestoreapi.com/products/", // URL de la API
+  baseURL: "https://o584ntxaf1.execute-api.us-east-1.amazonaws.com/Prod", // URL de la API
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': '*',
+    'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS'
   },
 });
 
@@ -93,5 +96,9 @@ export const doPut = (url, data) => {
 };
 
 export const doDelete = (url) => {
+  return instance.delete(url);
+};
+
+export const doPatch = (url) => {
   return instance.delete(url);
 };
