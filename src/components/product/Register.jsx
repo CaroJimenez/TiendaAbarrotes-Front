@@ -14,7 +14,7 @@ export default function RegisterProductForm() {
 
     const [suppliers, setSuppliers] = useState([]);
     useEffect(() => {
-        doGet("https://muyvj4lsu6.execute-api.us-east-1.amazonaws.com/Prod/supplier/getAll")
+        doGet("https://c6v8kro3w7.execute-api.us-east-1.amazonaws.com/Prod/supplier/getAll")
           .then((response) => {
             setSuppliers(response.data.suppliers);
             console.log(response.data.suppliers);

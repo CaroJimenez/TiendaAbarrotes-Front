@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { doGet, doPost } from '../../config/Axios';
+import { doGet, doPatch, doPost } from '../../config/Axios';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import loadingGif from '../../assets/loading2.gif';
@@ -34,7 +34,7 @@ export default function ProductList() {
 
   const addToCart = (productId) => {
     return () => {
-      doPost(`/cart/update/${productId}`, {})
+      doPatch(`/cart/update/${productId}`, {})
         .then(() => {
           Swal.fire({
             title: 'Producto agregado',
@@ -51,6 +51,7 @@ export default function ProductList() {
             icon: 'error',
           });
         });
+        console.log(productId)
     };
   };
 

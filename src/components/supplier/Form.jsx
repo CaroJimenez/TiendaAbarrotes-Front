@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { doPost, doPatch } from "../../config/Axios";
+import axios from "axios";
 import img from "../../assets/delivery.png";
 
 export default function SupplierForm({ onClose, initialValues, onSubmit }) {
@@ -29,35 +29,40 @@ export default function SupplierForm({ onClose, initialValues, onSubmit }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const action = initialValues ? "actualizar" : "registrar";
     const id = initialValues ? initialValues._id : null;
     console.log(id);
-    const url = initialValues 
-      ? `https://muyvj4lsu6.execute-api.us-east-1.amazonaws.com/Prod/supplier/update/${id}`
-      : "https://muyvj4lsu6.execute-api.us-east-1.amazonaws.com/Prod/supplier/insert";
-  
+    const url = initialValues
+      ? `https://c6v8kro3w7.execute-api.us-east-1.amazonaws.com/Prod/supplier/update/${id}`
+      : "https://c6v8kro3w7.execute-api.us-east-1.amazonaws.com/Prod/supplier/insert";
+
     Swal.fire({
       title: `¿Estás seguro de ${action} el proveedor?`,
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
       confirmButtonText: `Sí, ${action}`,
-      cancelButtonText: 'Cancelar',
+      cancelButtonText: "Cancelar",
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
+          const headers = {
+            "Content-Type": "application/json",
+          };
+
           if (initialValues) {
-            await doPatch(url, supplier);
+            await axios.patch(url, supplier, { headers });
             Swal.fire({
               icon: "success",
               title: "Proveedor actualizado",
               showConfirmButton: false,
               timer: 1500,
             });
+            console.log(supplier);
           } else {
-            await doPost(url, supplier);
+            await axios.post(url, supplier, { headers });
             Swal.fire({
               icon: "success",
               title: "Proveedor registrado",
@@ -65,7 +70,7 @@ export default function SupplierForm({ onClose, initialValues, onSubmit }) {
               timer: 1500,
             });
           }
-  
+
           setSupplier({
             name: "",
             contact: "",
@@ -74,15 +79,17 @@ export default function SupplierForm({ onClose, initialValues, onSubmit }) {
           setTimeout(() => {
             window.location.href = window.location.href;
           }, 3000);
-          
+
           if (onSubmit) onSubmit();
-  
         } catch (error) {
           console.error(error);
+          console.log(supplier);
           Swal.fire({
             icon: "error",
             title: "Error",
-            text: initialValues ? "Error al actualizar el proveedor" : "Error al registrar el proveedor",
+            text: initialValues
+              ? "Error al actualizar el proveedor"
+              : "Error al registrar el proveedor",
             showConfirmButton: false,
             timer: 1500,
           });
@@ -90,7 +97,6 @@ export default function SupplierForm({ onClose, initialValues, onSubmit }) {
       }
     });
   };
-  
 
   const handleClear = () => {
     setSupplier({
@@ -104,7 +110,9 @@ export default function SupplierForm({ onClose, initialValues, onSubmit }) {
     <div style={styles.container}>
       <div style={styles.header}>
         <div style={styles.titleContainer}>
-          <h5 style={styles.title}>{initialValues ? "Editar proveedor" : "Nuevo proveedor"}</h5>
+          <h5 style={styles.title}>
+            {initialValues ? "Editar proveedor" : "Nuevo proveedor"}
+          </h5>
         </div>
 
         <div style={styles.buttonClose}>
@@ -161,7 +169,11 @@ export default function SupplierForm({ onClose, initialValues, onSubmit }) {
           />
         </div>
         <div style={styles.buttonsContainer}>
-          <button className="btn btn-primary" type="submit" onClick={handleSubmit}>
+          <button
+            className="btn btn-primary"
+            type="submit"
+            onClick={handleSubmit}
+          >
             {initialValues ? "Actualizar" : "Registrar"}
           </button>
           <button className="btn btn-warning" type="button" onClick={handleClear}>
