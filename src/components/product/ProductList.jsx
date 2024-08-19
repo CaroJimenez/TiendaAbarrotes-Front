@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { doGet, doPatch, doPost } from '../../config/Axios';
-import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
-import loadingGif from '../../assets/loading2.gif';
+import React, { useEffect, useState } from "react";
+import { doGet, doPatch } from "../../config/Axios";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import loadingGif from "../../assets/loading2.gif";
 
 export default function ProductList() {
   const [products, setProducts] = useState([]);
@@ -14,13 +14,13 @@ export default function ProductList() {
 
     const fetchProducts = async () => {
       try {
-        const response = await doGet('/product/getAll');
+        const response = await doGet("/product/getAll");
         setProducts(response.data.products);
       } catch {
         Swal.fire({
-          title: 'Error',
-          text: 'Error al cargar los productos',
-          icon: 'error',
+          title: "Error",
+          text: "Error al cargar los productos",
+          icon: "error",
         });
       } finally {
         loadingTimeout = setTimeout(() => {
@@ -37,21 +37,21 @@ export default function ProductList() {
       doPatch(`/cart/update/${productId}`, {})
         .then(() => {
           Swal.fire({
-            title: 'Producto agregado',
-            text: 'El producto se ha agregado al carrito',
-            icon: 'success',
+            title: "Producto agregado",
+            text: "El producto se ha agregado al carrito",
+            icon: "success",
           }).then(() => {
-            navigate('/cart');
+            navigate("/cart");
           });
         })
         .catch(() => {
           Swal.fire({
-            title: 'Error',
-            text: 'Error al agregar el producto al carrito',
-            icon: 'error',
+            title: "Error",
+            text: "Error al agregar el producto al carrito",
+            icon: "error",
           });
         });
-        console.log(productId)
+      console.log(productId);
     };
   };
 
@@ -93,17 +93,17 @@ export default function ProductList() {
 
 const styles = {
   card: {
-    borderRadius: '15px',
-    overflow: 'hidden',
-    transition: 'transform 0.2s',
+    borderRadius: "15px",
+    overflow: "hidden",
+    transition: "transform 0.2s",
   },
   buttonContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    marginTop: '1rem',
+    display: "flex",
+    justifyContent: "center",
+    marginTop: "1rem",
   },
   loadingGif: {
-    width: '500px',
-    height: '400px',
+    width: "500px",
+    height: "400px",
   },
 };
