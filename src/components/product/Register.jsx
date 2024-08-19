@@ -9,22 +9,23 @@ export default function RegisterProductForm() {
         description: "",
         price: "",
         stock: "",
-        supplier: "",
+        id_supplier: "",
     });
 
     const [suppliers, setSuppliers] = useState([]);
-
     useEffect(() => {
-        const fetchSuppliers = async () => {
-            try {
-                const response = await doGet("/suppliers");
-                setSuppliers(response.data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        fetchSuppliers();
+        doGet("https://c6v8kro3w7.execute-api.us-east-1.amazonaws.com/Prod/supplier/getAll")
+          .then((response) => {
+            setSuppliers(response.data.suppliers);
+            console.log(response.data.suppliers);
+          })
+          .catch(() => {
+            Swal.fire({
+              title: "Error",
+              text: "Error al cargar los proveedores",
+              icon: "error",
+            });
+          });
     }, []);
 
     const handleChange = (e) => {
@@ -38,7 +39,7 @@ export default function RegisterProductForm() {
         e.preventDefault();
 
         try {
-            await doPost("/products", product);
+            await doPost("/product/insert", product);
             Swal.fire({
                 icon: "success",
                 title: "Producto registrado",
@@ -50,8 +51,9 @@ export default function RegisterProductForm() {
                 description: "",
                 price: "",
                 stock: "",
-                supplier: "",
+                id_supplier: "",
             });
+            console.log(product);
         } catch (error) {
             console.error(error);
             Swal.fire({
@@ -60,13 +62,14 @@ export default function RegisterProductForm() {
                 showConfirmButton: false,
                 timer: 1500,
             });
+            console.log(product);
         }
     }
 
     return (
-        <div className="container mt-5 mb-5" style={{width: '550px'}}>
-            <div class="card">
-                <div class="card-body">
+        <div className="container mt-5 mb-5" style={{ width: '550px' }}>
+            <div className="card">
+                <div className="card-body">
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
                             <label htmlFor="name" className="form-label">
@@ -127,24 +130,24 @@ export default function RegisterProductForm() {
                             <select
                                 className="form-select"
                                 id="supplier"
-                                name="supplier"
+                                name="id_supplier"
                                 onChange={handleChange}
-                                value={product.supplier}
+                                value={product.id_supplier}
                             >
                                 <option value="">Selecciona un proveedor</option>
                                 {suppliers.map((supplier) => (
-                                    <option key={supplier.id} value={supplier.id}>
+                                    <option key={supplier._id} value={supplier._id}>
                                         {supplier.name}
                                     </option>
                                 ))}
                             </select>
                         </div>
-                        <button type="submit" className="btn btn-primary" style={{width: "100%"}}>
+                        <button type="submit" className="btn btn-primary" style={{ width: "100%" }}>
                             Registrar
                         </button>
                     </form>
                 </div>
-            </div>  
+            </div>
         </div>
     );
 }

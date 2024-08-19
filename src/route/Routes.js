@@ -5,6 +5,7 @@ import Login from "../pages/Login";
 import Suppliers from "../pages/Suppliers";
 import Register from "../pages/Register";
 import RegisterProduct from "../pages/RegisterProduct";
+import CartPage from '../pages/CartPage';
 import Cart from "../pages/Cart";
 import ManageProducts from "../pages/ManageProducts";
 
@@ -22,7 +23,7 @@ export default function Router() {
       <Route path="/register" element={<Register />} />
 
       <Route path="/register-product" element={<RegisterProduct />} />
-
+      <Route path="/cart" element={<CartPage />} />
       <Route path="/mi-carrito" element={<Cart />} />
 
       <Route path="/manage-products" element={<ManageProducts />} />
