@@ -29,14 +29,17 @@ const styles = {
   },
   title: {
     color: "var(--color-secondary)",
-    fontSize: "1.5rem",
-    fontWeight: 700,
+    fontSize: "1.4rem",
+    fontWeight: 725,
   },
   link: {
     textDecoration: "none",
     color: "var(--color-secondary)",
     fontSize: "1.2rem",
     marginLeft: "1rem",
+
+
+
   },
 };
 export default Navbar;
