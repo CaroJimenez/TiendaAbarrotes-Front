@@ -109,16 +109,19 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     height: "100%",
+    borderColor: "var(--color-primary)",
   },
   inputContainer: {
     display: "flex",
     margin: "1%",
     width: "80%",
+    borderColor: "var(--color-primary)",
     height: "9%",
   },
   buttonsContainer: {
     display: "flex",
     flexDirection: "row-reverse",
+    borderColor: "var(--color-primary)",
     margin: "1%",
     width: "80%",
     height: "9%",
@@ -126,6 +129,7 @@ const styles = {
   },
   imgContainer: {
     width: "40%",
+    borderColor: "var(--color-primary)",
     height: "40%",
   },
   img: {
