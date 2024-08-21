@@ -34,8 +34,8 @@ export default function SupplierForm({ onClose, initialValues, onSubmit }) {
     const id = initialValues ? initialValues._id : null;
     console.log(id);
     const url = initialValues
-      ? `https://c6v8kro3w7.execute-api.us-east-1.amazonaws.com/Prod/supplier/update/${id}`
-      : "https://c6v8kro3w7.execute-api.us-east-1.amazonaws.com/Prod/supplier/insert";
+      ? `https://r6ng4v0ala.execute-api.us-east-1.amazonaws.com/Prod/supplier/update/${id}`
+      : "https://r6ng4v0ala.execute-api.us-east-1.amazonaws.com/Prod/supplier/insert";
 
     Swal.fire({
       title: `¿Estás seguro de ${action} el proveedor?`,

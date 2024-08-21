@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { doPost } from "../../config/Axios";
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 export default function LoginForm() {
+  const [loading, setLoading] = useState(false); // Estado para manejar la carga
   const navigate = useNavigate();
 
   const login = async () => {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
+
+    setLoading(true); // Activar estado de carga
 
     try {
       const response = await doPost('https://1zzmagp341.execute-api.us-east-1.amazonaws.com/Prod/login', { username: email, password });
@@ -38,6 +41,12 @@ export default function LoginForm() {
           navigate('/products'); // Redirect to the desired page
         } else {
           // Handle other possible errors
+          Swal.fire({
+            title: 'Error',
+            text: 'Credenciales incorrectas. Por favor, inténtalo de nuevo.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar',
+          });
         }
       }
     } catch (error) {
@@ -61,9 +70,7 @@ export default function LoginForm() {
           title: 'Valores incorrectos',
           text: 'Usuario o contraseña incorrectos. Por favor, inténtalo de nuevo.',
           icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: 'Sí',
-          cancelButtonText: 'No',
+          confirmButtonText: 'Aceptar',
         });
       } else {
         Swal.fire({
@@ -73,6 +80,8 @@ export default function LoginForm() {
           confirmButtonText: 'Aceptar',
         });
       }
+    } finally {
+      setLoading(false); // Desactivar estado de carga
     }
   };
 
@@ -94,12 +103,30 @@ export default function LoginForm() {
           e.preventDefault();
           login();
         }}
+        disabled={loading} // Deshabilitar el botón si loading es true
       >
-        Iniciar sesión
+        {loading ? (
+          <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> // Indicador de carga
+        ) : (
+          "Iniciar sesión"
+        )}
       </button>
       <div className="text-center mt-2">
         <a href="/register">Registrarse</a>
       </div>
+
+      <style jsx>{`
+        .spinner-border-sm {
+          width: 1.2rem;
+          height: 1.2rem;
+          border-width: 0.2em;
+        }
+
+        .btn:disabled {
+          opacity: 0.65;
+          cursor: not-allowed;
+        }
+      `}</style>
     </form>
   );
 }

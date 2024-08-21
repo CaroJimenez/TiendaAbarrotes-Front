@@ -7,14 +7,13 @@ export default function RegisterForm() {
 
   const register = async () => {
     const fullname = document.getElementById('fullname').value;
-    const user = document.getElementById('user').value;
     const email = document.getElementById('email').value;
     const phone_number = document.getElementById('phone_number').value;
     const age = parseInt(document.getElementById('age').value, 10);
     const gender = document.getElementById('gender').value;
 
     // Verifica si todos los campos necesarios están presentes
-    if (!fullname || !user || !email || !phone_number || isNaN(age) || !gender) {
+    if (!fullname || !email || !phone_number || isNaN(age) || !gender) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -23,6 +22,9 @@ export default function RegisterForm() {
       return;
     }
 
+    // Asigna el valor de email al user_name
+    const user_name = email;
+
     // Construye el cuerpo de la solicitud
     const requestBody = JSON.stringify({
       email,
@@ -30,7 +32,7 @@ export default function RegisterForm() {
       name: fullname,
       age,
       gender,
-      user_name: user
+      user_name // Asignar el valor de email como user_name
     });
 
     setLoading(true); // Activar estado de carga
@@ -81,10 +83,6 @@ export default function RegisterForm() {
       <div className="mb-3">
         <label htmlFor="fullname">Nombre completo</label>
         <input type="text" className="form-control" id="fullname" />
-      </div>
-      <div className="mb-3">
-        <label htmlFor="user">Nombre de usuario</label>
-        <input type="text" className="form-control" id="user" />
       </div>
       <div className="mb-3">
         <label htmlFor="email">Correo electrónico</label>
@@ -150,3 +148,4 @@ const styles = {
     borderColor: "#fd6250",
   }
 }
+

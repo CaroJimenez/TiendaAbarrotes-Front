@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { doPost } from "../../config/Axios";
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 export default function ChangePassword() {
@@ -18,6 +18,7 @@ export default function ChangePassword() {
     lowercase: false,
     specialChar: false
   });
+  const [isLoading, setIsLoading] = useState(false); // Estado para manejar el loading
 
   const specialCharPattern = /[^\w\s]|[_]/;
 
@@ -43,6 +44,7 @@ export default function ChangePassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true); // Inicia el spinner
   
     const email = localStorage.getItem('email'); // Obtener el email de localStorage
     const temporaryPassword = document.getElementById('temporaryPassword').value;
@@ -55,6 +57,7 @@ export default function ChangePassword() {
         icon: 'error',
         confirmButtonText: 'Aceptar',
       });
+      setIsLoading(false); // Detiene el spinner
       return;
     }
   
@@ -80,6 +83,8 @@ export default function ChangePassword() {
         confirmButtonText: 'Aceptar',
       }).then(() => {
         navigate('/');
+        //eliminar el email del localStorage
+        localStorage.removeItem('email');
       });
     } catch (error) {
       console.error('Error al cambiar la contraseña:', error);
@@ -89,6 +94,8 @@ export default function ChangePassword() {
         icon: 'error',
         confirmButtonText: 'Aceptar',
       });
+    } finally {
+      setIsLoading(false); // Detiene el spinner en cualquier caso
     }
   };
   
@@ -169,13 +176,21 @@ export default function ChangePassword() {
         <button
           type="submit"
           className="btn-submit"
+          disabled={isLoading} // Deshabilita el botón cuando está cargando
         >
-          Cambiar Contraseña
+          {isLoading ? (
+            <>
+              <span className="spinner"></span> Cargando...
+            </>
+          ) : (
+            'Cambiar Contraseña'
+          )}
         </button>
       </form>
 
       <style jsx>{`
         .change-password-container {
+          margin-top: 50px;
           max-width: 500px;
           margin: 0 auto;
           padding: 20px;
@@ -265,10 +280,27 @@ export default function ChangePassword() {
           font-size: 16px;
           cursor: pointer;
           transition: background-color 0.3s ease;
+          position: relative;
         }
 
         .btn-submit:hover {
           background-color: #e55e4f;
+        }
+
+        .spinner {
+          border: 4px solid rgba(0, 0, 0, 0.1);
+          border-radius: 50%;
+          border-top: 4px solid #fff;
+          width: 16px;
+          height: 16px;
+          animation: spin 1s linear infinite;
+          display: inline-block;
+          margin-right: 10px;
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
         }
       `}</style>
     </div>
