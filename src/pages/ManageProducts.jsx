@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "../components/navbar/Navbar";
-import Form from "../components/supplier/Form";
 import img from "../assets/products.png";
+import ProductForm from "../components/product/ProductForm";
 
 function ManageProducts() {
   const [isVisible, setIsVisible] = useState(false);
@@ -25,7 +25,7 @@ function ManageProducts() {
     <div style={styles.container}>
       {isVisible && (
         <div style={styles.formContainer}>
-          <Form onClose={handleCloseForm} />
+          <ProductForm onClose={handleCloseForm} />
         </div>
       )}
 
