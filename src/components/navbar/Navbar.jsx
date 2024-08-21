@@ -4,6 +4,10 @@ import "../../global/styles/index.css";
 function Navbar(props) {
   const { name, options } = props;
 
+  const LogOut = () => {
+    console.log("Cerrar sesión");
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.title}>{name}</div>
@@ -13,6 +17,9 @@ function Navbar(props) {
             {option.name}
           </a>
         ))}
+        <button style={styles.logout} type="submit" onClick={LogOut}>
+          Cerrar sesión
+        </button>
       </div>
     </div>
   );
@@ -37,9 +44,13 @@ const styles = {
     color: "var(--color-secondary)",
     fontSize: "1.2rem",
     marginLeft: "1rem",
-
-
-
+  },
+  logout: {
+    backgroundColor: "var(--color-primary)",
+    color: "white",
+    borderColor: "var(--color-primary)",
+    fontSize: "1.2rem",
+    marginLeft: "1rem",
   },
 };
 export default Navbar;
