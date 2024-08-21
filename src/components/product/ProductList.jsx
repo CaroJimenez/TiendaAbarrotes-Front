@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { doGet, doPatch, doPost } from '../../config/Axios';
+import { doGet, doPatch } from '../../config/Axios';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import loadingGif from '../../assets/loading4.gif';

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
 import img from "../../assets/delivery.png";
+import { doPatch, doPost } from "../../config/Axios";
 
 export default function SupplierForm({ onClose, initialValues, onSubmit }) {
   const [supplier, setSupplier] = useState({
@@ -53,7 +54,7 @@ export default function SupplierForm({ onClose, initialValues, onSubmit }) {
           };
 
           if (initialValues) {
-            await axios.patch(url, supplier, { headers });
+            await doPatch(url, supplier, { headers });
             Swal.fire({
               icon: "success",
               title: "Proveedor actualizado",
@@ -62,7 +63,7 @@ export default function SupplierForm({ onClose, initialValues, onSubmit }) {
             });
             console.log(supplier);
           } else {
-            await axios.post(url, supplier, { headers });
+            await doPost(url, supplier, { headers });
             Swal.fire({
               icon: "success",
               title: "Proveedor registrado",
