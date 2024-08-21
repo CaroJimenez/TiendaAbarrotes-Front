@@ -228,16 +228,19 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     height: "100%",
+
   },
   inputContainer: {
     display: "flex",
     margin: "1%",
     width: "80%",
+
     height: "9%",
   },
   buttonsContainer: {
     display: "flex",
     flexDirection: "row-reverse",
+
     margin: "1%",
     width: "80%",
     height: "9%",
@@ -245,6 +248,7 @@ const styles = {
   },
   imgContainer: {
     width: "40%",
+
     height: "40%",
   },
   img: {
