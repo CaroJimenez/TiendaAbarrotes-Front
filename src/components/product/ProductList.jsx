@@ -9,6 +9,8 @@ export default function ProductList() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  const role = localStorage.getItem('role');
+
   useEffect(() => {
     let loadingTimeout;
 
@@ -26,7 +28,7 @@ export default function ProductList() {
       } finally {
         loadingTimeout = setTimeout(() => {
           setLoading(false);
-        }, 6000);
+        }, 3000);
       }
       
     };

@@ -9,29 +9,73 @@ import CartPage from '../pages/CartPage';
 import Cart from "../pages/Cart";
 import ManageProducts from "../pages/ManageProducts";
 import ChangePassword from "../components/auth/ChangePassword";
+import PrivateRoute from "./PrivateRoutes";
+import PrivateRouteUser from "./PrivateRoutesUser";
 
 export default function Router() {
+
   return (
     <Routes>
+
       <Route path="/" element={<Login />} />
-
-      <Route path="/products" element={<Product />} />
-
-      <Route path="/suppliers" element={<Suppliers />} />
-
       <Route path="/register" element={<Register />} />
-
-      <Route path="/register" element={<Register />} />
-
-      <Route path="/register-product" element={<RegisterProduct />} />
-
-      <Route path="/cart" element={<CartPage />} />
-
-      <Route path="/mi-carrito" element={<Cart />} />
-
-      <Route path="/manage-products" element={<ManageProducts />} />
-
       <Route path="/change-password" element={<ChangePassword />} />
+
+       {/* Rutas Privada de Admin */}
+      <Route
+        path="/register-product"
+        element={
+          <PrivateRoute>
+            <RegisterProduct />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/suppliers"
+        element={
+          <PrivateRoute>
+            <Suppliers />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/manage-products"
+        element={
+          <PrivateRoute>
+            <ManageProducts />
+          </PrivateRoute>
+        }
+      />
+
+      {/* Rutas privadas de user */}
+
+      <Route
+        path="/products"
+        element={
+          <PrivateRouteUser>
+            <Product />
+          </PrivateRouteUser>
+        }
+      />
+      <Route
+        path="/cart"
+        element={
+          <PrivateRouteUser>
+            <CartPage />
+          </PrivateRouteUser>
+        }
+      />
+      <Route
+        path="/mi-carrito"
+        element={
+          <PrivateRouteUser>
+            <Cart />
+          </PrivateRouteUser>
+        }
+      />
+
     </Routes>
   );
 }

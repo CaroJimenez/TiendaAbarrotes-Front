@@ -2,16 +2,22 @@ import React, { useState } from "react";
 import { doPost } from "../../config/Axios";
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import * as Yup from 'yup';
+import { Formik, Form, Field, ErrorMessage } from "formik";
 
 export default function LoginForm() {
-  const [loading, setLoading] = useState(false); // Estado para manejar la carga
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const login = async () => {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().email("El correo no es válido").required("El correo electrónico es requerido"),
+    password: Yup.string().required("La contraseña es requerida")
+  });
 
-    setLoading(true); // Activar estado de carga
+  const handleLogin = async (values) => {
+    const { email, password } = values;
+
+    setLoading(true);
 
     try {
       const response = await doPost('https://1zzmagp341.execute-api.us-east-1.amazonaws.com/Prod/login', { username: email, password });
@@ -26,7 +32,7 @@ export default function LoginForm() {
           cancelButtonText: 'No',
         }).then((result) => {
           if (result.isConfirmed) {
-            localStorage.setItem('email', email); // Save the email in localStorage
+            localStorage.setItem('email', email);
             navigate('/change-password');
           }
         });
@@ -37,10 +43,13 @@ export default function LoginForm() {
           localStorage.setItem('access_token', response.data.access_token);
           localStorage.setItem('refresh_token', response.data.refresh_token);
           localStorage.setItem('role', response.data.role);
-          localStorage.setItem('email', email); // Save the email in localStorage
-          navigate('/products'); // Redirect to the desired page
+          localStorage.setItem('email', email);
+          if(localStorage.getItem('role') === 'Admins'){
+            navigate('/manage-products');
+          }else if(localStorage.getItem('role') === 'Users'){
+            navigate('/products');
+          }
         } else {
-          // Handle other possible errors
           Swal.fire({
             title: 'Error',
             text: 'Credenciales incorrectas. Por favor, inténtalo de nuevo.',
@@ -61,7 +70,7 @@ export default function LoginForm() {
           cancelButtonText: 'No',
         }).then((result) => {
           if (result.isConfirmed) {
-            localStorage.setItem('email', email); // Save the email in localStorage
+            localStorage.setItem('email', email);
             navigate('/change-password');
           }
         });
@@ -81,53 +90,59 @@ export default function LoginForm() {
         });
       }
     } finally {
-      setLoading(false); // Desactivar estado de carga
+      setLoading(false);
     }
   };
 
   return (
-    <form>
-      <div className="mb-3">
-        <label htmlFor="email">Correo</label>
-        <input type="email" className="form-control" id="email" />
-      </div>
-      <div className="mb-3">
-        <label htmlFor="password">Contraseña</label>
-        <input type="password" className="form-control" id="password" />
-      </div>
-      <button
-        type="submit"
-        className="btn btn-primary"
-        style={styles.button}
-        onClick={(e) => {
-          e.preventDefault();
-          login();
-        }}
-        disabled={loading} // Deshabilitar el botón si loading es true
-      >
-        {loading ? (
-          <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> // Indicador de carga
-        ) : (
-          "Iniciar sesión"
-        )}
-      </button>
-      <div className="text-center mt-2">
-        <a href="/register">Registrarse</a>
-      </div>
+    <Formik
+      initialValues={{ email: '', password: '' }}
+      validationSchema={validationSchema}
+      onSubmit={handleLogin}
+    >
+      {({ isSubmitting }) => (
+        <Form>
+          <div className="mb-3">
+            <label htmlFor="email">Correo</label>
+            <Field type="email" className="form-control" id="email" name="email" />
+            <ErrorMessage name="email" component="div" className="text-danger" />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="password">Contraseña</label>
+            <Field type="password" className="form-control" id="password" name="password" />
+            <ErrorMessage name="password" component="div" className="text-danger" />
+          </div>
+          <button
+            type="submit"
+            className="btn btn-primary"
+            style={styles.button}
+            disabled={loading || isSubmitting}
+          >
+            {loading ? (
+              <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            ) : (
+              "Iniciar sesión"
+            )}
+          </button>
+          <div className="text-center mt-2">
+            <a href="/register">Registrarse</a>
+          </div>
 
-      <style jsx>{`
-        .spinner-border-sm {
-          width: 1.2rem;
-          height: 1.2rem;
-          border-width: 0.2em;
-        }
+          <style jsx>{`
+            .spinner-border-sm {
+              width: 1.2rem;
+              height: 1.2rem;
+              border-width: 0.2em;
+            }
 
-        .btn:disabled {
-          opacity: 0.65;
-          cursor: not-allowed;
-        }
-      `}</style>
-    </form>
+            .btn:disabled {
+              opacity: 0.65;
+              cursor: not-allowed;
+            }
+          `}</style>
+        </Form>
+      )}
+    </Formik>
   );
 }
 
