@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { doGet, doPost } from "../../config/Axios";
+import { doGet, doPatch, doPut } from "../../config/Axios";
 import Swal from "sweetalert2";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 
-export default function RegisterProductForm({ onClose }) {
-
+export default function EditProductForm({ productId, onClose }) {
     const validationSchema = Yup.object().shape({
         name: Yup.string().required("El nombre es requerido").min(3, "El nombre debe tener al menos 3 caracteres").max(12, "El nombre debe tener máximo 12 caracteres"),
         description: Yup.string().required("La descripción es requerida").min(3, "La descripción debe tener al menos 3 caracteres").max(50, "La descripción debe tener máximo 50 caracteres"),
@@ -14,13 +13,27 @@ export default function RegisterProductForm({ onClose }) {
         id_supplier: Yup.string().required("El proveedor es requerido"),
     });
 
+    const [product, setProduct] = useState(null);
     const [suppliers, setSuppliers] = useState([]);
-    
+
     useEffect(() => {
+        // Cargar datos del producto
+        doGet(`/product/get/${productId}`)
+            .then((response) => {
+                setProduct(response.data.product);
+            })
+            .catch(() => {
+                Swal.fire({
+                    title: "Error",
+                    text: "Error al cargar los datos del producto",
+                    icon: "error",
+                });
+            });
+
+        // Cargar proveedores
         doGet("https://r6ng4v0ala.execute-api.us-east-1.amazonaws.com/Prod/supplier/getAll")
             .then((response) => {
                 setSuppliers(response.data.suppliers);
-                console.log(response.data.suppliers);
             })
             .catch(() => {
                 Swal.fire({
@@ -29,28 +42,32 @@ export default function RegisterProductForm({ onClose }) {
                     icon: "error",
                 });
             });
-    }, []);
+    }, [productId]);
 
     const handleSubmit = async (values, { resetForm }) => {
         try {
-            await doPost("/product/insert", values);
+            await doPatch(`https://l7941h189k.execute-api.us-east-1.amazonaws.com/Prod/product/update/${productId}`, values);
             Swal.fire({
                 icon: "success",
-                title: "Producto registrado",
+                title: "Producto actualizado",
                 showConfirmButton: false,
                 timer: 1500,
             });
             resetForm();
-            onClose();  // Cerrar el modal automáticamente
+            onClose();
         } catch (error) {
             console.error(error);
             Swal.fire({
                 icon: "error",
-                title: "Error al registrar el producto",
+                title: "Error al actualizar el producto",
                 showConfirmButton: false,
                 timer: 1500,
             });
         }
+    };
+
+    if (!product) {
+        return <div>Cargando datos del producto...</div>;
     }
 
     return (
@@ -60,11 +77,11 @@ export default function RegisterProductForm({ onClose }) {
                     <button type="button" className="btn-close" aria-label="Close" onClick={onClose} style={{ float: 'right' }}></button>
                     <Formik
                         initialValues={{
-                            name: "",
-                            description: "",
-                            price: "",
-                            stock: "",
-                            id_supplier: "",
+                            name: product.name || "",
+                            description: product.description || "",
+                            price: product.price || "",
+                            stock: product.stock || "",
+                            id_supplier: product.id_supplier || "",
                         }}
                         validationSchema={validationSchema}
                         onSubmit={handleSubmit}
@@ -139,7 +156,7 @@ export default function RegisterProductForm({ onClose }) {
                                     <ErrorMessage name="id_supplier" component="div" className="text-danger" />
                                 </div>
                                 <button type="submit" className="btn btn-outline-primary mt-2" disabled={!isValid} style={styles.btn}>
-                                    Registrar
+                                    Actualizar
                                 </button>
                             </Form>
                         )}
@@ -154,4 +171,4 @@ const styles = {
     btn: {
         width: '100%',
     }
-}
+};

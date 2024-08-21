@@ -1,16 +1,96 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/navbar/Navbar";
+import Form from "../components/product/Register";
 import img from "../assets/products.png";
-import ProductForm from "../components/product/ProductForm";
+import { doGet, doDelete } from "../config/Axios"; // Asegúrate de que `doDelete` esté configurado en Axios
+import Swal from 'sweetalert2';
+import EditProductForm from "../components/product/EditProduct";
 
 function ManageProducts() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [isVisible, setIsVisible] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isEditing, setIsEditing] = useState(false); // Nuevo estado para distinguir entre editar y crear
+
+  const role = localStorage.getItem('role');
+  const idToken = localStorage.getItem('id_token');
+
   const toggleVisibility = () => {
     setIsVisible(!isVisible);
   };
+
   const handleCloseForm = () => {
     setIsVisible(false);
+    setSelectedProduct(null);
+    setIsEditing(false); // Resetea el estado de edición al cerrar el formulario
   };
+
+  const handleEditProduct = (product) => {
+    setSelectedProduct(product);
+    setIsEditing(true); // Indica que se está editando un producto
+    setIsVisible(true);
+  };
+
+  const handleDeleteProduct = async (productId) => {
+    try {
+      const result = await Swal.fire({
+        title: '¿Estás seguro?',
+        text: "No podrás revertir esta acción",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminarlo!'
+      });
+
+      if (result.isConfirmed) {
+        await doDelete(`/product/delete/${productId}`, {
+          headers: {
+            Authorization: `Bearer ${idToken}`
+          }
+        });
+
+        setProducts(products.filter(product => product._id !== productId));
+
+        Swal.fire(
+          'Eliminado!',
+          'El producto ha sido eliminado.',
+          'success'
+        );
+      }
+    } catch (error) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Error al eliminar el producto',
+        icon: 'error',
+      });
+    }
+  };
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await doGet('/product/getAll', {
+          headers: {
+            Authorization: `Bearer ${idToken}`
+          }
+        });
+        setProducts(response.data.products);
+      } catch (error) {
+        Swal.fire({
+          title: 'Error',
+          text: 'Error al cargar los productos',
+          icon: 'error',
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [idToken]);
+
   const options = [
     {
       name: "Productos",
@@ -21,11 +101,31 @@ function ManageProducts() {
       URL: "/cart",
     },
   ];
+
+  if (loading) {
+    return (
+      <div style={styles.container}>
+        <p>Cargando productos...</p>
+      </div>
+    );
+  }
+
   return (
     <div style={styles.container}>
       {isVisible && (
         <div style={styles.formContainer}>
-          <ProductForm onClose={handleCloseForm} />
+          {isEditing ? (
+            <EditProductForm 
+              productId={selectedProduct?._id} 
+              onClose={handleCloseForm} 
+            />
+          ) : (
+            <Form 
+              onClose={handleCloseForm} 
+              product={selectedProduct} 
+              isEditing={isEditing} // Pasa el estado de edición al formulario
+            />
+          )}
         </div>
       )}
 
@@ -36,15 +136,17 @@ function ManageProducts() {
         <img src={img} style={styles.titleImage} alt="proveedores" />
         <h1 style={styles.title}>Lista de productos</h1>
       </div>
-      <div style={styles.buttonContainer}>
-        <button
-          type="submit"
-          className="btn btn-primary"
-          onClick={toggleVisibility}
-        >
-          Nuevo producto
-        </button>
-      </div>
+      {role === 'Admins' && (
+        <div style={styles.buttonContainer}>
+          <button
+            type="submit"
+            className="btn btn-primary"
+            onClick={toggleVisibility}
+          >
+            Nuevo producto
+          </button>
+        </div>
+      )}
       <div style={styles.tableContainer}>
         <div style={styles.tableHeader}>
           <div style={{ ...styles.tableTitle, ...styles.tableCell }}>
@@ -63,50 +165,38 @@ function ManageProducts() {
             Acciones
           </div>
         </div>
-        <div style={styles.tableRow}>
-          <div style={styles.tableCell}>Negrito bimbo</div>
-          <div style={styles.tableCell}>$50</div>
-          <div style={styles.tableCell}>235</div>
-          <div style={styles.tableCell}>Pan con cubierta de chocolate</div>
-          <div style={styles.tableCell}>
-            <button
-              style={styles.buttonUpdate}
-              type="submit"
-              className="btn btn-primary"
-            >
-              Editar
-            </button>
-            <button
-              style={styles.buttonDelete}
-              type="submit"
-              className="btn btn-primary"
-            >
-              Eliminar
-            </button>
+        {products.length > 0 ? (
+          products.map(product => (
+            <div key={product._id} style={styles.tableRow}>
+              <div style={styles.tableCell}>{product.name}</div>
+              <div style={styles.tableCell}>${product.price}</div>
+              <div style={styles.tableCell}>{product.stock}</div>
+              <div style={styles.tableCell}>{product.description}</div>
+              <div style={styles.tableCell}>
+                <button
+                  style={styles.buttonUpdate}
+                  type="submit"
+                  className="btn btn-primary"
+                  onClick={() => handleEditProduct(product)}
+                >
+                  Editar
+                </button>
+                <button
+                  style={styles.buttonDelete}
+                  type="submit"
+                  className="btn btn-danger"
+                  onClick={() => handleDeleteProduct(product._id)}
+                >
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div style={styles.tableRow}>
+            <div style={styles.tableCell}>No hay productos disponibles</div>
           </div>
-        </div>
-        <div style={styles.tableRow}>
-          <div style={styles.tableCell}>Negrito bimbo</div>
-          <div style={styles.tableCell}>$50</div>
-          <div style={styles.tableCell}>235</div>
-          <div style={styles.tableCell}>Pan con cubierta de chocolate</div>
-          <div style={styles.tableCell}>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              style={styles.buttonUpdate}
-            >
-              Editar
-            </button>
-            <button
-              style={styles.buttonDelete}
-              type="submit"
-              className="btn btn-primary"
-            >
-              Eliminar
-            </button>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
@@ -156,8 +246,8 @@ const styles = {
   buttonDelete: {
     backgroundColor: "var(--color-primary)",
     borderColor: "var(--color-primary)",
+    color: "white",
   },
-
   formContainer: {
     position: "absolute",
     display: "flex",
