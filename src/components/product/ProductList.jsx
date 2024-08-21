@@ -22,11 +22,13 @@ export default function ProductList() {
           text: 'Error al cargar los productos',
           icon: 'error',
         });
+
       } finally {
         loadingTimeout = setTimeout(() => {
           setLoading(false);
         }, 2000);
       }
+      
     };
     fetchProducts();
     return () => clearTimeout(loadingTimeout);
