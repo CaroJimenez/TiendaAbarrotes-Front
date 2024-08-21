@@ -8,6 +8,7 @@ import RegisterProduct from "../pages/RegisterProduct";
 import CartPage from '../pages/CartPage';
 import Cart from "../pages/Cart";
 import ManageProducts from "../pages/ManageProducts";
+import ChangePassword from "../components/auth/ChangePassword";
 
 export default function Router() {
   return (
@@ -23,10 +24,14 @@ export default function Router() {
       <Route path="/register" element={<Register />} />
 
       <Route path="/register-product" element={<RegisterProduct />} />
+
       <Route path="/cart" element={<CartPage />} />
+
       <Route path="/mi-carrito" element={<Cart />} />
 
       <Route path="/manage-products" element={<ManageProducts />} />
+
+      <Route path="/change-password" element={<ChangePassword />} />
     </Routes>
   );
 }

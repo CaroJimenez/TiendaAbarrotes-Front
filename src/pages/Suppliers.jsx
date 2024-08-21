@@ -31,7 +31,7 @@ function Suppliers() {
 
     const fetchSuppliers = async () => {
       try {
-        const response = await doGet("https://c6v8kro3w7.execute-api.us-east-1.amazonaws.com/Prod/supplier/getAll");
+        const response = await doGet("https://r6ng4v0ala.execute-api.us-east-1.amazonaws.com/Prod/supplier/getAll");
         setSuppliers(response.data.suppliers);
       } catch {
         Swal.fire({
@@ -61,7 +61,7 @@ function Suppliers() {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        doDelete(`https://c6v8kro3w7.execute-api.us-east-1.amazonaws.com/Prod/supplier/delete/${supplierId}`)
+        doDelete(`https://r6ng4v0ala.execute-api.us-east-1.amazonaws.com/Prod/supplier/delete/${supplierId}`)
           .then(() => {
             Swal.fire(
               'Eliminado!',

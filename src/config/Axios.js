@@ -2,7 +2,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const instance = axios.create({
-  baseURL: "https://u7hdpv2wub.execute-api.us-east-1.amazonaws.com/Prod", // URL de la API
+  baseURL: "https://l7941h189k.execute-api.us-east-1.amazonaws.com/Prod", // URL de la API
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",
