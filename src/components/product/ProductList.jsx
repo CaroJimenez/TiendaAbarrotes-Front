@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { doGet, doPatch, doPost } from '../../config/Axios';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import loadingGif from '../../assets/loading2.gif';
+import loadingGif from '../../assets/loading4.gif';
 
 export default function ProductList() {
   const [products, setProducts] = useState([]);
@@ -26,7 +26,7 @@ export default function ProductList() {
       } finally {
         loadingTimeout = setTimeout(() => {
           setLoading(false);
-        }, 2000);
+        }, 6000);
       }
       
     };
