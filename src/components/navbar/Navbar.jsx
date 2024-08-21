@@ -20,6 +20,10 @@ function Navbar(props) {
     return false; // Hide options for any other roles
   });
 
+  const LogOut = () => {
+    console.log("Cerrar sesión");
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.title}>{name}</div>
@@ -66,6 +70,13 @@ const styles = {
   link: {
     textDecoration: "none",
     color: "var(--color-secondary)",
+    fontSize: "1.2rem",
+    marginLeft: "1rem",
+  },
+  logout: {
+    backgroundColor: "var(--color-primary)",
+    color: "white",
+    borderColor: "var(--color-primary)",
     fontSize: "1.2rem",
     marginLeft: "1rem",
   },
