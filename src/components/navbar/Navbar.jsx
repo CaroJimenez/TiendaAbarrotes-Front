@@ -3,16 +3,47 @@ import "../../global/styles/index.css";
 
 function Navbar(props) {
   const { name, options } = props;
+  const role = localStorage.getItem("role");
+
+  const closeSession = () => {
+    console.log("closeSession");
+    localStorage.clear();
+  };
+
+  const filteredOptions = options.filter(option => {
+    if (role === "Admins") {
+      return option.name === "Productos" || option.name === "Proveedores";
+    }
+    if (role === "Users") {
+      return option.name === "Productos";
+    }
+    return false; // Hide options for any other roles
+  });
 
   return (
     <div style={styles.container}>
       <div style={styles.title}>{name}</div>
       <div>
-        {options.map((option) => (
-          <a href={option.URL} key={option.name} style={styles.link}>
-            {option.name}
+        {role === "Admins" && (
+          <>
+            <a href="/manage-products" style={styles.link}>
+              Productos
+            </a>
+            <a href="/suppliers" style={styles.link}>
+              Proveedores
+            </a>
+          </>
+        )}
+        {role === "Users" && (
+          <a href="/products" style={styles.link}>
+            Productos
           </a>
-        ))}
+        )}
+      </div>
+      <div>
+        <a href="/" style={styles.link} onClick={closeSession}>
+          Cerrar sesión
+        </a>
       </div>
     </div>
   );
@@ -37,9 +68,7 @@ const styles = {
     color: "var(--color-secondary)",
     fontSize: "1.2rem",
     marginLeft: "1rem",
-
-
-
   },
 };
+
 export default Navbar;
